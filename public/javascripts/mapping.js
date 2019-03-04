@@ -3,27 +3,29 @@ const data_values = [];
 
 $(document).ready(() => {
     var items = [];
+
+
 var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', function(data){
     var counter = 0
 
     $.each(data, function(key, val){
-        if ((val.location.longitude > -2) && (val.location.longitude < -1) && (val.location.latitude <= 55) && (val.location.latitude >= 52)){
+        if ((val.location.longitude > -1.58) && (val.location.longitude < -1.34) && (val.location.latitude <= 53.468) && (val.location.latitude >= 53.29)){
             if(val.sensordatavalues[0].value_type == "P1"){
-                items.push([key, val.location.latitude, val.location.longitude, val.sensordatavalues[0].value, val.sensordatavalues[1].value]);
+                items.push([key, val.location.latitude, val.location.longitude, val.sensordatavalues[0].value, val.sensordatavalues[1].value, val.sensor.id, val.sensor.sensor_type.name]);
 
             }
         }
+
         counter ++;
     });
-
     var mymap = L.map('mapid').setView([53.382, -1.47], 13);
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
-        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        attribution: 'Sensor Data <a href="https://luftdaten.info/en/home-en/">Luftdaten</a> | Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
         id: 'mapbox.streets',
         accessToken: 'pk.eyJ1IjoiZGFtYmVtIiwiYSI6ImNqczgyZmZ3MzEzOTMzeXJuODFmbjRrbjYifQ.cerkLIWoRAz2aGASHP_VaQ'
     }).addTo(mymap);
-
+    console.log(items)
     circles = []
     for (var i = 0; i < items.length; i++) {
 
@@ -55,6 +57,7 @@ var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', functi
 
     // var marker = L.marker([53.382, -1.47]).addTo(mymap);
     // marker.bindTooltip("blahblah").openTooltip()
+    temp = []
 
     var ctx = document.getElementById("myChart").getContext('2d');
     var myChart = new Chart(ctx, {
@@ -106,61 +109,22 @@ var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', functi
         }
     });
 
-    var ctx = document.getElementById("myChart2").getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: ["8am", "12am", "4pm", "8pm", "12pm"],
-            datasets: [{
-                label: 'CO2 Level (%)',
-                data: [18, 19, 12, 13, 5],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                ],
-                borderWidth: 1
-            },
-                {
-                    label:"National Average",
-                    data: [17, 16, 10, 10, 1],
-                    backgroundColor: [
-                        'rgba(108, 219, 10, 0.5 )',
-                    ],
-                    borderColor: [
-                        'rgba(108, 219, 10, 1)',
-                    ],
-                    borderWidth: 1
-                },
-                {
-                    label:"WHO 24 Hour Guidelines PM10",
-                    data: [50, 50, 50, 50, 50],
-                    backgroundColor: [
-                        'rgba(108, 219, 10, 0.5 )',
-                    ],
-                    borderColor: [
-                        'rgba(108, 219, 10, 1)',
-                    ],
-                    borderWidth: 1
-                }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero:true
-                    }
-                }]
-            }
-        }
+    console.log("before")
+    last7 = Array(7);
+    $.each(items, function(key, val){
+        temp = []
+        $.each(last7, function(key2, val2){
+            console.log(key)
+            var date = new Date();
+            date.setDate(date.getDate() - (key2 + 1));
+            yesterdays_date = date.toJSON()
+            correct_date = yesterdays_date.substring(0, 10)
+            url = "http://archive.luftdaten.info/" + correct_date + "/" + correct_date + "_" + (val[6]).toLowerCase() + "_sensor_" + val[5] + ".csv"
+            console.log(url)
+            temp.push[date, url]
+        });
     });
-
 });
-var yesterday = new Date(Date.now() - 864e5);
 
-console.log(yesterday)
-console.log(yesterday.getDay())
-console.log(yesterday.getMonth())
-console.log(yesterday.toDateString())
+
 });
