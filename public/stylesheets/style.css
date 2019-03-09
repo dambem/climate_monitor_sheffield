@@ -4,11 +4,11 @@ body {
 }
 
 a {
-  color: #00B7FF;
+  /*color: #00B7FF;*/
 }
 
 #mapid{
-  height:650px;
+  height:500px;
   width:100%;
 }
 

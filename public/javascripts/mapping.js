@@ -18,7 +18,11 @@ var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', functi
 
         counter ++;
     });
-    var mymap = L.map('mapid').setView([53.382, -1.47], 13);
+    var mymap = L.map('mapid', {
+        minZoom: 12
+        // maxZoom: 10
+    })
+    mymap.setView([53.382, -1.47], 13);
     L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
         attribution: 'Sensor Data <a href="https://luftdaten.info/en/home-en/">Luftdaten</a> | Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
         maxZoom: 18,
@@ -40,19 +44,18 @@ var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', functi
         }).addTo(mymap));
     }
     for (var i = 0; i < circles.length; i++) {
-        circles[i].bindPopup("<h4><b>Past 24 Hour Average</b></h4><h4>pm10: "+items[i][3]+"</h4> <h4>pm2.5: "+items[i][4]+"</h4><p><a>What does this mean?</a></p>");
+        circles[i].bindPopup("<h4><b>Past 24 Hour Average</b></h4><h4>pm10: "+items[i][3]+"</h4> <h4>pm2.5: "+items[i][4]+"</h4><p></p>");
         data_values.push([items[i][0], items[i][1]]);
         circles[i].on('click', function(event) {
             circle_chosen = event.target.options.choice_id
 
-            document.getElementById('details').innerHTML = "LAT: " + items[circle_chosen][1] + " LON: " + items[circle_chosen][2];
         })
     }
 
 
     var popup = L.popup()
         .setLatLng([53.382, -1.47])
-        .setContent("<h4>Click on a circle to view sensor info</h4> <a>What does this mean?</a>")
+        .setContent("<b>Click on a circle to view sensor info</b>")
         .openOn(mymap);
 
     // var marker = L.marker([53.382, -1.47]).addTo(mymap);
