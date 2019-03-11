@@ -32,11 +32,26 @@ var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', functi
     console.log(items)
     circles = []
     for (var i = 0; i < items.length; i++) {
-
+        console.log(items[i][3])
+        if (items[i][3] >= 20 || items[i][4] >= 10){
+            colour = '#FDE74C'
+        }
+        else if (items[i][3] >= 30 || items[i][4] >= 15){
+            colour = '#FA7921'
+        }
+        else if (items[i][3] >= 50 || items[i][4] >= 25){
+            colour = '#E55934'
+        }
+        else if (items[i][3] >= 70 || items[i][4] >= 35){
+            colour = '#D62839'
+        }
+        else {
+            colour ='#4392F1'
+        }
         circles.push(L.circle([items[i][1], items[i][2]], {
-            color: 'blue',
-            fillColor: 'blue',
-            fillOpacity: 0.2,
+            color: 'black',
+            fillColor: colour,
+            fillOpacity: 0.4,
             radius: 225,
             p10: [items[i][3]],
             p2: [items[i][4]],
