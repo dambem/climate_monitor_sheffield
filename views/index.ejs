@@ -15,13 +15,11 @@
             crossorigin=""></script>
     <script src="./javascripts/mapping.js"></script>
   </head>
-  <div class="fixed-top">
-  <nav class="navbar navbar-expand-lg justify-content-md-centre navbar-info bg-light">
-    <h4 class="navbar-brand"><%= title %></h4>
-
-
-  </nav>
-  </div>
+  <!--<nav class="navbar navbar-expand-lg justify-content-md-centre navbar-info bg-light">-->
+    <!--<h4 class="navbar-brand"><%= title %></h4>-->
+  <!--</nav>-->
+  <body>
+  <!--</div>-->
   <div class="container-fluid">
   <div class="row">
     <div class="col-md-12">
@@ -39,17 +37,105 @@
   <div class="row">
     <div class="col-4">
       <div class="list-group" id="list-tab" role="tablist">
-        <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Air Quality Guidelines</a>
+        <a class="list-group-item list-group-item-action active" id="list-info-list" data-toggle="list" href="#list-info" role="tab", aria-controls="info">What Does This Mean?</a>
+        <a class="list-group-item list-group-item-action" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Air Quality Guidelines</a>
         <!--<a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">What Can I Do?</a>-->
         <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Contacts and Helpful Links</a>
+        <a class="list-group-item list-group-item-action" id="list-code-list" data-toggle="list" href="#list-code" role="tab" aria-controls="code">View Code</a>
+
       </div>
     </div>
     <div class="col-8">
       <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="list-info" role="tabpanel" aria-labelledby="list-info-list">
+          <h3>What is PM10 and PM2.5?</h3>
+          <p> PM is a generic term used to describe mixtures of solids and liquids in varying size. The main source of man-made PM is through the combustion of fuels (E.g, Vehicles and Industry)</p>
+          <p> <b>PM10</b> Refers to course particles that are less than 10 microns (µm) in diameter</p>
+          <p> <b>PM2.5</b> Refers to particles that are less than 2.5 (µm) in diameter.</p>
+          <p> There is an extensive body of evidence that <b>long-term exposure to PM increases mortality and morbidity from cardiovascular and respiratory diseases. </b> It has also been classified by the International Agency for Research on Cancer as <b>carcinogenic to humans (a Group 1 carcinogen) and a cause of lung cancer. </b> </p>
+          <img class="img-fluid" src="images/sources-100.jpg">
+          <a href="https://www.gov.uk/government/publications/health-matters-air-pollution/health-matters-air-pollution?fbclid=IwAR1WCj4WuVHtGuDehhsQZ682MUpF4MIdM2AL8i4Z6UvyjnIkOiePaYjrQks"> Information and images from Gov.UK</a>
+        </div>
         <div class="tab-pane fade show" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">
           <a href="https://luftdaten.info/en/home-en/">Luftdaten Particle Data</a>
+          <hr>
+          <a href="https://www.gov.uk/government/publications/health-matters-air-pollution/health-matters-air-pollution?fbclid=IwAR1WCj4WuVHtGuDehhsQZ682MUpF4MIdM2AL8i4Z6UvyjnIkOiePaYjrQks"> Gov.uk, Health Matters information on air pollution</a>
         </div>
-        <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
+        <div class="tab-pane fade show" id="list-code" role="tabpanel" aria-labelledby="list-code-list">
+          <pre>
+          <code>
+
+            var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', function(data){
+            var counter = 0
+
+            $.each(data, function(key, val){
+            if ((val.location.longitude > -1.58) && (val.location.longitude < -1.34) && (val.location.latitude <= 53.468) && (val.location.latitude >= 53.29)){
+            if(val.sensordatavalues[0].value_type == "P1"){
+            items.push([key, val.location.latitude, val.location.longitude, val.sensordatavalues[0].value, val.sensordatavalues[1].value, val.sensor.id, val.sensor.sensor_type.name]);
+
+            }
+            }
+
+            counter ++;
+            });
+            var mymap = L.map('mapid', {
+            minZoom: 12
+            // maxZoom: 10
+            })
+            mymap.setView([53.382, -1.47], 13);
+            L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+            attribution: 'Sensor Data <a href="https://luftdaten.info/en/home-en/">Luftdaten</a> | Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+            id: 'mapbox.streets',
+            accessToken: 'pk.eyJ1IjoiZGFtYmVtIiwiYSI6ImNqczgyZmZ3MzEzOTMzeXJuODFmbjRrbjYifQ.cerkLIWoRAz2aGASHP_VaQ'
+            }).addTo(mymap);
+            console.log(items)
+            circles = []
+            for (var i = 0; i < items.length; i++) {
+            console.log(items[i][3])
+            if (items[i][3] >= 20 || items[i][4] >= 10){
+            colour = '#FDE74C'
+            }
+            else if (items[i][3] >= 30 || items[i][4] >= 15){
+            colour = '#FA7921'
+            }
+            else if (items[i][3] >= 50 || items[i][4] >= 25){
+            colour = '#E55934'
+            }
+            else if (items[i][3] >= 70 || items[i][4] >= 35){
+            colour = '#D62839'
+            }
+            else {
+            colour ='#4392F1'
+            }
+            circles.push(L.circle([items[i][1], items[i][2]], {
+            color: 'black',
+            fillColor: colour,
+            fillOpacity: 0.4,
+            radius: 225,
+            p10: [items[i][3]],
+            p2: [items[i][4]],
+            choice_id: i
+            }).addTo(mymap));
+            }
+            for (var i = 0; i < circles.length; i++) {
+            circles[i].bindPopup("Past 24 Hour Average pm10: "+items[i][3]+"pm2.5: "+items[i][4]);
+            data_values.push([items[i][0], items[i][1]]);
+            circles[i].on('click', function(event) {
+            circle_chosen = event.target.options.choice_id
+
+            })
+            }
+
+
+            var popup = L.popup()
+            .setLatLng([53.382, -1.47])
+            .setContent("Click on a circle to view sensor info")
+            .openOn(mymap);
+          </code>
+            </pre>
+        </div>
+        <div class="tab-pane fade show" id="list-home" role="tabpanel" aria-labelledby="list-home-list">
           <h5> WHO air quality guidelines for particulate matter</h5>
           <table class="table">
             <thead>
