@@ -18,7 +18,12 @@ var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', functi
         counter ++;
     });
     var mymap = L.map('mapid', {
-        minZoom: 12
+        minZoom: 12,
+        fullscreenControl: true,
+        fullscreenControlOptions: {
+            position: 'topleft'
+        }
+
         // maxZoom: 10
     })
     navigator.geolocation.getCurrentPosition(function(location) {
