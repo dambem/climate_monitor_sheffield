@@ -12,6 +12,41 @@ a {
   width:100%;
 }
 
+#max{
+ background-color: black;
+  color:white;
+}
+
+#veryhigh{
+  background-color: #a20049;
+  color:white;
+
+}
+
+#high{
+  background-color: #d600a4;
+  color:white;
+
+}
+
+#medium{
+  background-color: #FF3C38;
+  color: #000000;
+
+}
+
+#low{
+  background-color: #FF8C42;
+  color: #000000;
+
+}
+
+#verylow{
+  background-color: #FFF275;
+  color: #000000;
+
+}
+
 #myChart{
   height:100%;
   width:100%;

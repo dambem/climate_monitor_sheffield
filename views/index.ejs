@@ -19,6 +19,15 @@
     <script src="Control.FullScreen.js"></script>
 
     <script src="./javascripts/mapping.js"></script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-138762321-1"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-138762321-1');
+    </script>
   </head>
   <!--<nav class="navbar navbar-expand-lg justify-content-md-centre navbar-info bg-light">-->
     <!--<h4 class="navbar-brand"><%= title %></h4>-->
@@ -157,43 +166,37 @@
             </tr>
             </thead>
             <tbody>
-            <tr class="alert-danger">
+            <tr id="max">
               <td><b>24 Hours</b></td>
               <td>150</td>
               <td>75</td>
               <td>5% Increase in short term mortality  (if 24 hour average)</td>
             </tr>
-            <tr class="alert-danger">
+            <tr id="veryhigh">
               <td><b>24 Hours</b></td>
               <td>100</td>
               <td>50</td>
               <td>2.5% Increase in short term mortality (if 24 hour average)</td>
             </tr>
-            <tr class="alert-danger">
-              <td><b>24 Hours</b></td>
-              <td>75</td>
-              <td>37.5</td>
-              <td>1.2% Increase in short term mortality (if 24 hour average)</td>
-            </tr>
-            <tr class="alert-danger">
+            <tr id="high">
               <td><b>Yearly</b></td>
               <td>70</td>
               <td>35</td>
               <td>15% Increase in long term mortality risk (if yearly average)</td>
             </tr>
-            <tr class="alert-danger">
+            <tr  id="medium">
               <td><b>Yearly</b></td>
               <td>50</td>
               <td>25</td>
               <td>9% Increase in long term mortality risk (if yearly average)</td>
             </tr>
-            <tr class="alert-danger">
+            <tr id="low">
               <td><b>Yearly</b></td>
               <td>30</td>
               <td>15</td>
               <td>3% Increase in long term mortality risk (if yearly average)</td>
             </tr>
-            <tr class="alert-warning">
+            <tr  id="verylow">
               <td><b>Yearly</b></td>
               <td>20</td>
               <td>10</td>

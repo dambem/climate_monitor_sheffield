@@ -6,7 +6,11 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var schedule = require('node-schedule');
 
+var j = schedule.scheduleJob('30 8 * * *', function(){
+  console.log('Tweeting out');
+});
 var app = express();
 
 // view engine setup
