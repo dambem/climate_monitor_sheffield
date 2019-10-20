@@ -24,7 +24,6 @@ var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', functi
             position: 'topleft'
         }
 
-        // maxZoom: 10
     })
     navigator.geolocation.getCurrentPosition(function(location) {
         var userlocation = new L.LatLng(location.coords.latitude, location.coords.longitude);
@@ -75,7 +74,7 @@ var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', functi
             color: 'black',
             fillColor: colour,
             fillOpacity: 0.8,
-            radius: 200,
+            radius: 150,
             p10: [items[i][3]],
             p2: [items[i][4]],
             choice_id: i
@@ -90,16 +89,12 @@ var json = $.getJSON('http://api.luftdaten.info/static/v2/data.24h.json', functi
         })
     }
 
-
     var popup = L.popup()
         .setLatLng([53.382, -1.47])
         .setContent("<b>Click on a circle to view sensor info</b>")
         .openOn(mymap);
 
-    // var marker = L.marker([53.382, -1.47]).addTo(mymap);
-    // marker.bindTooltip("blahblah").openTooltip()
     temp = []
-
     var ctx = document.getElementById("myChart").getContext('2d');
     var myChart = new Chart(ctx, {
         type: 'bar',
